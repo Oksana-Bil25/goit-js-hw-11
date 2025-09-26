@@ -1,3 +1,4 @@
+// src/main.js
 import { getImagesByQuery } from "./js/pixabay-api.js";
 import {
   createGallery,
@@ -11,6 +12,9 @@ import "izitoast/dist/css/iziToast.min.css";
 
 const form = document.querySelector(".form");
 
+
+hideLoader();
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -23,28 +27,30 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
+  
   clearGallery();
   showLoader();
 
   try {
     const data = await getImagesByQuery(query);
 
-    if (!data.hits.length) {
+    if (!data || !data.hits || data.hits.length === 0) {
       iziToast.error({
         title: "Помилка",
         message:
           "Sorry, there are no images matching your search query. Please try again!",
       });
-      return;
+    } else {
+      createGallery(data.hits);
     }
-
-    createGallery(data.hits);
   } catch (error) {
+    console.error("Помилка при завантаженні:", error);
     iziToast.error({
       title: "Помилка",
       message: "Щось пішло не так",
     });
   } finally {
+    
     hideLoader();
   }
 });

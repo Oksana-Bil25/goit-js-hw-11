@@ -59,7 +59,7 @@ body {
   animation: spin 1s linear infinite;
 }
 
-loader.hidden {
+.hidden {
   display: none;
 }
 
